@@ -1,0 +1,8 @@
+Django
+djangorestframework
+django-cors-headers
+djoser
+SQLAlchemy
+pandas
+pandas-datareader
+yfinance
