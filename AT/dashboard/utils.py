@@ -1,11 +1,12 @@
+import datetime
+import numpy as np
+from dateutil import parser
+
 from pandas.tseries.offsets import BDay
-import yfinance as yf
 import pandas as pd
 from pandas_datareader import data as pdr
-from dateutil import parser
-import datetime
+import yfinance as yf
 from sqlalchemy import create_engine, engine, Table, text
-import numpy as np
 
 
 class update_data:
@@ -174,3 +175,15 @@ class update_data:
         engine = create_engine(address)
         connect = engine.connect()
         return connect
+
+def merge_dicts(dicts_list):
+    merged_dict = {}
+    max_len = len(dicts_list)
+
+    for i, d in enumerate(dicts_list):
+        for k, v in d.items():
+            if k not in merged_dict:
+                merged_dict[k] = [None] * max_len
+            merged_dict[k][i] = v
+
+    return merged_dict
