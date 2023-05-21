@@ -50,20 +50,15 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_HOST = [
     "http://localhost:8080",
-    "http://localhost:8081",
-    "http://192.168.1.187:8081",
+    "http://172.20.10.2:8080",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://localhost:8081",
-    "http://192.168.1.187:8081",
-]
+CORS_ALLOWED_ORIGINS = ["http://localhost:8080", "http://172.20.10.2:8080"]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -115,7 +110,6 @@ DATABASES = {
 }
 
 client = MongoClient("Scrapy", "sel_broker")
-
 
 
 # Password validation
