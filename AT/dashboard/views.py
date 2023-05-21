@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view
 from .serializers import TableSerializer, Currencies_Serializer
 from .models import Currency_table, Currencies
 from .utils import update_data, merge_dates_with_missing_dates
-from Financial_data_crawler.db.ChipModels import Day_Transaction_Info
-from Financial_data_crawler.db.ChipModels import Broker_Transaction
+from Financial_data_crawler.db.ChipModels import Day_Transaction_Info,Broker_Transaction
+from Financial_data_crawler.db.FundamentalModels import BaseInfo
 
 
 # Create your views here.
@@ -46,4 +46,11 @@ class SelBroker(APIView):
             Broker_Transaction.objects(stockid=revised_id).order_by("Date").as_pymongo()
         )
         broker_trans_data = merge_dates_with_missing_dates(broker_trans)
+        return Response(broker_trans_data)
+
+class FinancialReport(APIView):
+    def get(self, request, stockid, format=None):
+        financials = (
+            BaseInfo.objects(stockid=stockid).order_by("Date").as_pymongo()
+        )
         return Response(broker_trans_data)
