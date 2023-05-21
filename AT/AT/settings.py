@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from Django_AT.AT import config_setup
+from Financial_data_crawler.db.clients import MongoClient
+
+config = config_setup.config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,20 +50,15 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_HOST = [
     "http://localhost:8080",
-    "http://localhost:8081",
-    "http://192.168.1.187:8081",
+    "http://172.20.10.2:8080",
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://localhost:8081",
-    "http://192.168.1.187:8081",
-]
+CORS_ALLOWED_ORIGINS = ["http://localhost:8080", "http://172.20.10.2:8080"]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -102,13 +101,15 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",  # 指定使用的資料庫引擎，可以通過 Django.db.backends 來檢視哪些資料庫可以與 Django 配合使用；
         "NAME": "django",  # 資料庫名字
-        "USER": "root",  # mysql 使用者名稱稱
-        "PASSWORD": "test",  # 資料庫的密碼
+        "USER": config.get("MySQL", "user"),  # mysql 使用者名稱稱
+        "PASSWORD": config.get("MySQL", "password"),  # 資料庫的密碼
         "HOST": "localhost",  # 資料庫服務地址， 這裡我們是測試開發 填本地地址
         "PORT": 3306,  # mysql 對應的埠號
         "default-character-set": "UTF8",  # 設定編碼規則 utf8
     }
 }
+
+client = MongoClient("Scrapy", "sel_broker")
 
 
 # Password validation

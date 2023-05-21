@@ -36,6 +36,7 @@ class Currency_table(models.Model):
     class Meta:
         ordering = ("product",)
         db_table = "Currencies_table"
+        app_label = "dashboard"
 
     def __str__(self):
         return self.product

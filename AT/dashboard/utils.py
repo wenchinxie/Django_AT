@@ -1,11 +1,12 @@
+from datetime import datetime, timedelta
+import numpy as np
+from dateutil import parser
+
 from pandas.tseries.offsets import BDay
-import yfinance as yf
 import pandas as pd
 from pandas_datareader import data as pdr
-from dateutil import parser
-import datetime
+import yfinance as yf
 from sqlalchemy import create_engine, engine, Table, text
-import numpy as np
 
 
 class update_data:
@@ -61,9 +62,9 @@ class update_data:
             recent_date = parser.parse(str(row["Date"]))
         except:
             # Then make a fake data
-            recent_date = datetime.datetime(2021, 1, 1, 0, 0)
+            recent_date = datetime(2021, 1, 1, 0, 0)
 
-        lastest_bday = datetime.datetime.today() - BDay(1)
+        lastest_bday = datetime.today() - BDay(1)
         if recent_date.date() != lastest_bday.date():
             renew_data = self.fetch_updated_data(recent_date)
             renew_data.to_sql(
@@ -174,3 +175,40 @@ class update_data:
         engine = create_engine(address)
         connect = engine.connect()
         return connect
+
+
+def find_missing_dates(dicts_list):
+    dates_set = {
+        datetime.strptime(d["Date"].replace("/", "-"), "%Y-%m-%d").date()
+        for d in dicts_list
+    }
+    min_date = min(dates_set)
+    max_date = max(dates_set)
+    all_dates = {
+        min_date + timedelta(days=i) for i in range((max_date - min_date).days + 1)
+    }
+    existing_dates = {
+        datetime.strptime(d["Date"].replace("/", "-"), "%Y-%m-%d").date()
+        for d in dicts_list
+    }
+    missing_dates = [str(date) for date in all_dates - existing_dates]
+    return missing_dates
+
+
+def merge_dicts(dicts_list):
+    merged_dict = {}
+    max_len = len(dicts_list)
+
+    for i, d in enumerate(dicts_list):
+        for k, v in d.items():
+            if k not in merged_dict:
+                merged_dict[k] = [None] * max_len
+            merged_dict[k][i] = v
+
+    return merged_dict
+
+
+def merge_dates_with_missing_dates(dicts_list):
+    data = merge_dicts(dicts_list)
+    data["Missing Dates"] = find_missing_dates(dicts_list)
+    return data
