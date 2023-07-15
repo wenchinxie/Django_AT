@@ -1,7 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
 class Currency_table(models.Model):
     product = models.CharField(
         max_length=255, db_tablespace="Currencies_table", db_column="Product"
@@ -64,3 +63,37 @@ class Currencies(models.Model):
 
     def __str__(self):
         return self.product
+
+
+class Industries(models.Model):
+    IndCode = models.CharField(
+        max_length=255, null=True, db_tablespace="Inds", db_column="IndCode"
+    )
+    SubInd = models.CharField(
+        max_length=255, null=True, db_tablespace="Inds", db_column="SubInd"
+    )
+    SubIndCode = models.CharField(
+        max_length=255, null=True, db_tablespace="Inds", db_column="SubIndCode"
+    )
+    Code = models.CharField(
+        max_length=255, null=False, db_tablespace="Inds", db_column="Code"
+    )
+    Name = models.CharField(
+        max_length=255, null=False, db_tablespace="Inds", db_column="Name"
+    )
+    MainIndCode = models.CharField(
+        max_length=255, null=True, db_tablespace="Inds", db_column="MainIndCode"
+    )
+    MainIndName = models.CharField(
+        max_length=255, null=True, db_tablespace="Inds", db_column="MainIndName"
+    )
+    IndName = models.CharField(
+        max_length=255, null=True, db_tablespace="Inds", db_column="IndName"
+    )
+
+    class Meta:
+        ordering = ("MainIndName",)
+        db_table = "Inds"
+
+    def __str__(self):
+        return (self.Name,self.SubInd,self.MainIndName)
