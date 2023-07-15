@@ -66,20 +66,24 @@ class Currencies(models.Model):
 
 
 class Industries(models.Model):
-    IndCode = models.CharField(
+    indcode = models.CharField(
         max_length=255, null=True, db_tablespace="Inds", db_column="IndCode"
     )
-    SubInd = models.CharField(
+    subind = models.CharField(
         max_length=255, null=True, db_tablespace="Inds", db_column="SubInd"
     )
     SubIndCode = models.CharField(
         max_length=255, null=True, db_tablespace="Inds", db_column="SubIndCode"
     )
-    Code = models.CharField(
-        max_length=255, null=False, db_tablespace="Inds", db_column="Code"
+    stock_id = models.CharField(
+        max_length=255,
+        null=False,
+        db_tablespace="Inds",
+        db_column="stock_id",
+        primary_key=True,
     )
-    Name = models.CharField(
-        max_length=255, null=False, db_tablespace="Inds", db_column="Name"
+    stock_name = models.CharField(
+        max_length=255, null=False, db_tablespace="Inds", db_column="stock_name"
     )
     MainIndCode = models.CharField(
         max_length=255, null=True, db_tablespace="Inds", db_column="MainIndCode"
@@ -96,4 +100,28 @@ class Industries(models.Model):
         db_table = "Inds"
 
     def __str__(self):
-        return (self.Name,self.SubInd,self.MainIndName)
+        return (self.stock_name, self.SubInd, self.MainIndName)
+
+
+class MarginTrading(models.Model):
+    date = models.DateField(null=False)
+    stock_id = models.CharField(max_length=10, null=False, primary_key=True)
+    stock_name = models.CharField(max_length=255, null=False)
+    MarginPurchaseBuy = models.IntegerField()
+    MarginPurchaseCashRepayment = models.IntegerField()
+    MarginPurchaseLimit = models.IntegerField()
+    MarginPurchaseSell = models.IntegerField()
+    MarginPurchaseTodayBalance = models.IntegerField()
+    MarginPurchaseYesterdayBalance = models.IntegerField()
+    Note = models.CharField(max_length=3, null=True)
+    OffsetLoanAndShort = models.IntegerField()
+    ShortSaleBuy = models.IntegerField()
+    ShortSaleCashRepayment = models.IntegerField()
+    ShortSaleLimit = models.IntegerField()
+    ShortSaleSell = models.IntegerField()
+    ShortSaleTodayBalance = models.IntegerField()
+    ShortSaleYesterdayBalance = models.IntegerField()
+
+    class Meta:
+        unique_together = ("date", "stock_id")
+
