@@ -113,7 +113,7 @@ class MarginTrading(models.Model):
     MarginPurchaseSell = models.IntegerField()
     MarginPurchaseTodayBalance = models.IntegerField()
     MarginPurchaseYesterdayBalance = models.IntegerField()
-    Note = models.CharField(max_length=3, null=True)
+    Note = models.CharField(max_length=20, null=True)
     OffsetLoanAndShort = models.IntegerField()
     ShortSaleBuy = models.IntegerField()
     ShortSaleCashRepayment = models.IntegerField()
@@ -124,4 +124,3 @@ class MarginTrading(models.Model):
 
     class Meta:
         unique_together = ("date", "stock_id")
-
